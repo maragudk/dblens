@@ -1,16 +1,3 @@
-# dblens
-
-An HTTP handler for database browsing.
-
-BEWARE: `dblens.Handler` accepts ALL queries, including destructive ones. Don't expose the handler to the wide public.
-
-## Usage
-
-```shell
-go get -u github.com/maragudk/dblens
-```
-
-```go
 package main
 
 import (
@@ -48,10 +35,3 @@ func start() int {
 
 	return 0
 }
-```
-
-## Screenshot
-
-![screenshot.png](docs%2Fscreenshot.png)
-
-Made in 🇩🇰 by [maragu](https://www.maragu.dk/), maker of [online Go courses](https://www.golang.dk/).
