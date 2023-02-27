@@ -12,6 +12,8 @@ import (
 	"github.com/jmoiron/sqlx"
 	g "github.com/maragudk/gomponents"
 	"github.com/maragudk/gomponents-heroicons/v2/solid"
+	hx "github.com/maragudk/gomponents-htmx"
+	hxhttp "github.com/maragudk/gomponents-htmx/http"
 	c "github.com/maragudk/gomponents/components"
 	. "github.com/maragudk/gomponents/html"
 
@@ -36,8 +38,8 @@ func Handler(db *sql.DB, driverName string) http.HandlerFunc {
 			t, err = runQuery(r.Context(), sqlx.NewDb(db, driverName), query)
 		}
 
-		if r.Header.Get("HX-Request") == "true" {
-			w.Header().Set("HX-Push", r.URL.Path+"?query="+url.QueryEscape(query))
+		if hxhttp.IsRequest(r.Header) {
+			hxhttp.SetPushURL(w.Header(), r.URL.Path+"?query="+url.QueryEscape(query))
 			return result(t, err), nil
 		}
 
@@ -87,8 +89,8 @@ func page(path, query string, t table, err error) g.Node {
 		Body: []g.Node{
 			container(
 				FormEl(Action(path), Method("get"), Class("flex items-center w-full mt-16 mb-32"),
-					DataAttr("hx-boost", "true"), DataAttr("hx-target", "#result"),
-					DataAttr("hx-swap", "innerHTML show:window:top"),
+					hx.Boost("true"), hx.Target("#result"),
+					hx.Swap("innerHTML show:window:top"),
 					Label(For("query"), Class("sr-only"), g.Text("Query")),
 					Div(Class("relative rounded-md shadow-sm flex-grow"),
 						Div(Class("absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"),
